@@ -1,3 +1,6 @@
+# Note: The numbers in this file may differ from those reported in the paper.
+# Bug statuses were updated after submission based on developers' responses.
+
 Inspected Violations: 271
 Inspected Projects: 124
 False Positives: 100
