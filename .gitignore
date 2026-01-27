@@ -1,0 +1,30 @@
+# Virtual environment files and directories
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Caches and temporary files
+__pycache__
+.pytest_cache
+htmlcov/
+.coverage
+*.egg-info
+/build/
+*~
+
+# IDEA setting files
+.idea
+.vscode
+
+# Trace files
+**/trace.txt
+
+# macOS system files
+.DS_Store
+
+# Temporary directory
+temp/

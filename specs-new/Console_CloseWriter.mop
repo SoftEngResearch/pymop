@@ -1,0 +1,17 @@
+{
+  "Spec_Name": "Console_CloseWriter",
+  "Description": "This specification warns if close() is invoked on sys.stdout which is a useless invocation.",
+  "Source": "https://docs.python.org/3/faq/library.html#why-doesn-t-closing-sys-stdout-stdin-stderr-really-close-it",
+  "Formalism": "ere",
+  "Formula": "close+",
+  "Creation_Events": ["close"],
+  "Event_Method_Map": {
+    "Before": {},
+    "After": {
+      "close": [["sys.stdout", "close"]]
+    }
+  },
+  "Handlers": {
+    "match": "The close() method does not necessarily need to be called on sys.stdout. (violation at file {call_file_name}, line {call_line_num})."
+  }
+}

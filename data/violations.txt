@@ -1,0 +1,14 @@
+pymop vs dynapyt:
+Violations only in pymop: 11
+Violations only in dynapyt: 2
+Violations shared: 26
+
+pymop vs dylin:
+Violations only in pymop: 12
+Violations only in dylin: 2
+Violations shared: 25
+
+pymop_libs vs dynapyt_libs:
+Violations only in pymop_libs: 87
+Violations only in dynapyt_libs: 9
+Violations shared: 41

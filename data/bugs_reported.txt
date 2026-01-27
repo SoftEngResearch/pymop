@@ -1,0 +1,12 @@
+Inspected Violations: 259
+Inspected Projects: 122
+False Positives: 100
+Not fixable: 15
+True Postives: 144
+Opened PRs: 95
+Pending PRs: 67
+Accepted PRs: 31
+Rejected PRs: 1
+Accepted Bugs: 64
+Pending Bugs: 77
+Rejected Bugs: 3

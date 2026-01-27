@@ -1,0 +1,12 @@
+pytest
+JPype1
+nltk
+numpy
+# forbiddenfruit
+# pytest-asyncio==0.23.8
+# requests
+# scipy
+# Flask==3.0.3
+# tornado==6.4.1
+# pyftpdlib==2.0.1
+# tensorflow
