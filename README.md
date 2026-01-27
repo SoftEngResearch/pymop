@@ -332,3 +332,7 @@ This section will guide you through how to run PyMOP on an open-source project. 
    ```
 
 More options can be found in the Environment Variables section.
+
+## Contributing
+
+We are accepting issues and pull requests. We welcome all who are interested to help fix issues.

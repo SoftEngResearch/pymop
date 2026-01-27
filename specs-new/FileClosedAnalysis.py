@@ -118,8 +118,8 @@ class FileClosedAnalysis(Spec):
     def match(self, call_file_name, call_line_num, print_status):
         for file_opened in self.opened:
             open_stack_trace = self.openStackTrace[file_opened]
-            open_file_name = open_stack_trace.split('\n')[6].split(':')[0][3:].strip()
-            open_line_num = open_stack_trace.split('\n')[6].split(':')[1].strip()
+            open_file_name = open_stack_trace.split('\n')[7].split(':')[0][3:].strip()
+            open_line_num = open_stack_trace.split('\n')[7].split(':')[1].strip()
 
             # Get the custom message
             custom_message = f'Spec - {self.__class__.__name__}: You forgot to close file: {file_opened} opened at {open_file_name}:{open_line_num}'
