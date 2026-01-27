@@ -57,52 +57,9 @@ source pymop-venv/bin/activate
 ```
 
 This will activate the PyMOP virtual environment and you can now use PyMOP on any project you want.
+-->
 
-### Run PyMOP on a open-source project
-
-This section will guide you through running PyMOP on a open-source project. We'll use the `gdipak` project as an example.
-
-To run PyMOP on a open-source project, you need to follow these steps:
-
-1. Set Up Test Project
-```bash
-# Clone the test project (gdipak)
-git clone https://github.com/2pair/gdipak
-
-# Install project dependencies
-cd gdipak
-pip install .
-```
-
-2. Run PyMOP with the `gdipak` project using all the specifications in the `pymop-artifacts-rv/pymop/specs-new` folder.
-
-You can run PyMOP using one of the following commands:
-
-a. Run with **monkey patching + curse** instrumentation strategy **(recommended)**:
-```bash
-pytest tests --algo=D --path="$PWD/../pymop-artifacts-rv/pymop/specs-new"
-```
-
-b. Run with **monkey patching** instrumentation strategy:
-```bash
-pytest tests --algo=D --path="$PWD/../pymop-artifacts-rv/pymop/specs-new" --instrument_strategy=builtin
-```
-
-c. Run with **monkey patching + AST** instrumentation strategy:
-```bash
-PYTHONPATH="$PWD/../pymop-artifacts-rv/pymop/pythonmop/pymop-startup-helper" pytest tests --algo=D --path="$PWD/../pymop-artifacts-rv/pymop/specs-new" --instrument_strategy=ast
-```
-
-> **Note:** The **monkey patching + curse** strategy (default) is recommended for most cases as it provides the best balance of performance and reliability.
-
-3. Violation Fixing (if applicable)
-
-If the `PyMOP` finds violations, you can find the code place that violates the specification in the testing report printed out in the terminal.
-
-### Re-run the runtime verification tests with the fixed code
-
-After fixing the code, you can re-run the tests using the same command from Step 2 (e.g., `pytest tests --algo=D --path="$PWD/../pymop-artifacts-rv/pymop/specs-new"` for the recommended strategy).
-
+<!--
 ## Installation
 
 There are two ways to install PyMOP: using Docker (recommended) or installing directly on your system.
@@ -303,3 +260,75 @@ export PYMOP_STATISTICS_FILE=/path/to/stats.json
 # Run tests
 pytest tests
 ```
+
+## Output Structure
+
+When PyMOP is run with statistics output enabled (e.g. `PYMOP_STATISTICS=yes` and `PYMOP_STATISTICS_FILE` set), three JSON files are written to the current working directory. The filename prefix is the parametric algorithm you used (A, B, C, C+, or D). The table below uses **D** as an example.
+
+| File                | Purpose                                                        |
+|---------------------|----------------------------------------------------------------|
+| `D-violations.json` | Unique violations found during execution, with counts for each |
+| `D-time.json`       | Timing information measured by PyMOP                           |
+| `D-full.json`       | Statistics of PyMOP monitors and events during test execution  |
+
+## Run PyMOP on an open-source project
+
+This section will guide you through how to run PyMOP on an open-source project. You should run the below example inside the Docker container, or in an environment with proper system requirements installed. We will use the [`omergertel/pyformance (sha b71056e)`](https://github.com/omergertel/pyformance.git) project as an example.
+
+> **Demo video:** A step-by-step walkthrough of running PyMOP on the `omergertel/pyformance` example is available [here](https://youtu.be/xIJn0WfiOKc)
+
+1. Set Up Test Project
+
+   ```bash
+   # Clone the test project (omergertel/pyformance)
+   cd ~ && git clone https://github.com/omergertel/pyformance.git project
+
+   # Create a virtual environment and activate it
+   cd project
+   python3 -m venv venv
+   source venv/bin/activate
+
+   # Install project dependencies
+   pip install .
+   pip install mock setuptools pytest
+
+   # Run original test (Optional)
+   pytest tests
+   ```
+
+2. Install PyMOP
+
+   ```bash
+   pip install ~/pymop
+   ```
+
+3. Run PyMOP with the `omergertel/pyformance` project using all the specifications in the `~/pymop/specs-new` folder.
+
+   You can run PyMOP using one of the following commands:
+
+   a. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm D without monitoring libraries (recommended)
+   ```bash
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=D PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_STATISTICS=yes PYMOP_STATISTICS_FILE=D.json PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest tests
+   ```
+
+   b. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm C without monitoring libraries
+   ```bash
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=C PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_STATISTICS=yes PYMOP_STATISTICS_FILE=C.json PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest tests
+   ```
+
+   c. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm D without monitoring libraries while printing the violations (if any) during test execution to the terminal
+   ```bash
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=D PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=yes PYMOP_STATISTICS=yes PYMOP_STATISTICS_FILE=D.json PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest -s tests
+   ```
+
+   d. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm D without monitoring libraries while printing the violations at the end of the test execution to the terminal
+   ```bash
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=D PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=yes PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest -s tests
+   ```
+
+   e. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm D with libraries monitored
+   ```bash
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=D PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_INSTRUMENT_SITE_PACKAGES=yes PYMOP_STATISTICS=yes PYMOP_STATISTICS_FILE=D.json PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest tests
+   ```
+
+More options can be found in the Environment Variables section.
