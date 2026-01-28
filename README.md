@@ -617,6 +617,7 @@ This section will guide you through how to run PyMOP on an open-source project. 
 2. Install PyMOP
 
    ```bash
+   pip install -r ~/pymop/requirements.txt
    pip install ~/pymop
    ```
 
