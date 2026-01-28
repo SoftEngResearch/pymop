@@ -41,6 +41,8 @@ USER pymop
 
 WORKDIR /home/pymop/
 
+RUN git clone https://github.com/SoftEngResearch/pymop
+
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
