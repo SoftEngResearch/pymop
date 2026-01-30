@@ -1,5 +1,5 @@
 Project,Type,Spec,PRs,Status
-SigmaHQ-pySigma,project,BuiltinAllAnalysis,https://github.com/SigmaHQ/pySigma/pull/437,PR Opened
+SigmaHQ-pySigma,project,BuiltinAllAnalysis,https://github.com/SigmaHQ/pySigma/pull/437,PR Accepted
 AlexRiina-checkmyreqs,project,FileClosedAnalysis,https://github.com/AlexRiina/checkmyreqs/pull/1,PR Opened
 Arcadia-Science-readlif,project,FileClosedAnalysis,https://github.com/Arcadia-Science/readlif/pull/67,PR Opened
 Building-Transparency-ECHO-schema,project,FileClosedAnalysis,https://github.com/Building-Transparency/ECHO-schema/pull/5,PR Opened
@@ -7,7 +7,7 @@ CMakePP-CMinx,project,FileClosedAnalysis,https://github.com/CMakePP/CMinx/pull/1
 DCZYewen-Python-Silk-Module,project,FileClosedAnalysis,https://github.com/DCZYewen/Python-Silk-Module/pull/12,PR Accepted
 K0lb3-UnityPy,project,FileClosedAnalysis,https://github.com/K0lb3/UnityPy/pull/358,PR Opened
 OnroerendErfgoed-skosprovider_rdf,project,FileClosedAnalysis,https://github.com/OnroerendErfgoed/skosprovider_rdf/pull/132,PR Opened
-SigmaHQ-pySigma,project,FileClosedAnalysis,https://github.com/SigmaHQ/pySigma/pull/438,PR Opened
+SigmaHQ-pySigma,project,FileClosedAnalysis,https://github.com/SigmaHQ/pySigma/pull/438,PR Accepted
 bcwaldon-warlock,project,FileClosedAnalysis,https://github.com/bcwaldon/warlock/pull/70,PR Opened
 bjhall-upd,project,FileClosedAnalysis,https://github.com/bjhall/upd/pull/10,PR Opened
 by-cx-InvoiceGenerator,project,FileClosedAnalysis,https://github.com/by-cx/InvoiceGenerator/pull/55,PR Opened
@@ -18,8 +18,8 @@ dundee-mypy2junit,project,FileClosedAnalysis,https://github.com/dundee/mypy2juni
 dvc94ch-pykicad,project,FileClosedAnalysis,https://github.com/dvc94ch/pykicad/pull/43,PR Accepted
 geekscape-aiko_services,project,FileClosedAnalysis,https://github.com/geekscape/aiko_services/pull/53,PR Opened
 gutomaia-nesasm_py,project,FileClosedAnalysis,https://github.com/gutomaia/nesasm_py/pull/11,PR Opened
-hfaran-Tornado-JSON,project,FileClosedAnalysis,https://github.com/hfaran/Tornado-JSON/pull/115,PR Opened
-intezer-analyze-python-sdk,project,FileClosedAnalysis,https://github.com/intezer/analyze-python-sdk/pull/167,PR Opened
+hfaran-Tornado-JSON,project,FileClosedAnalysis,https://github.com/hfaran/Tornado-JSON/pull/115,PR Accepted
+intezer-analyze-python-sdk,project,FileClosedAnalysis,https://github.com/intezer/analyze-python-sdk/pull/167,PR Accepted
 lsst-ts-ts_xml,project,FileClosedAnalysis,https://github.com/lsst-ts/ts_xml/pull/1054,PR Opened
 macbre-mediawiki-dump,project,FileClosedAnalysis,https://github.com/macbre/mediawiki-dump/pull/302,PR Opened
 microscopexyz-chainmetareader,project,FileClosedAnalysis,https://github.com/microscopexyz/chainmetareader/pull/106,PR Opened
@@ -84,7 +84,7 @@ MattParr-python-atws,project,Requests_MustCloseSession,https://github.com/MattPa
 OnroerendErfgoed-skosprovider_atramhasis,project,Requests_MustCloseSession,https://github.com/OnroerendErfgoed/skosprovider_atramhasis/pull/141,PR Opened
 andr1an-nic-api,project,Requests_MustCloseSession,https://github.com/andr1an/nic-api/pull/40,PR Accepted
 SasView-sasdata,project,StringConcatAnalysis,https://github.com/SasView/sasdata/pull/185,PR Opened
-SigmaHQ-pySigma,project,StringConcatAnalysis,https://github.com/SigmaHQ/pySigma/pull/436,PR Opened
+SigmaHQ-pySigma,project,StringConcatAnalysis,https://github.com/SigmaHQ/pySigma/pull/436,PR Accepted
 jgressier-cfdtools,project,StringConcatAnalysis,https://github.com/jgressier/cfdtools/pull/58,PR Opened
 mondeja-mkdocs-include-markdown-plugin,project,StringConcatAnalysis,https://github.com/mondeja/mkdocs-include-markdown-plugin/pull/288,PR Accepted
 python-periodictable-periodictable,project,StringConcatAnalysis,https://github.com/python-periodictable/periodictable/pull/112,PR Opened

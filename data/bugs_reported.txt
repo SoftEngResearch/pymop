@@ -7,9 +7,13 @@ False Positives: 100
 Not fixable: 15
 True Postives: 156
 Opened PRs: 95
-Pending PRs: 62
-Accepted PRs: 35
+Pending PRs: 57
+Accepted PRs: 40
 Rejected PRs: 2
-Accepted Bugs: 67
-Pending Bugs: 81
+Accepted Bugs: 75
+Pending Bugs: 73
 Rejected Bugs: 8
+Resource Cleanup: 11
+Performance: 23
+Call Ordering: 11
+API Recommendations: 30
