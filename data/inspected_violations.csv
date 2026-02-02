@@ -16,7 +16,7 @@ bjhall-upd,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/s
 by-cx-InvoiceGenerator,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/by-cx/InvoiceGenerator/pull/55
 cernopendata-cernopendata-client,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/cernopendata/cernopendata-client/pull/176
 cisagov-clamav-report,project,PR Accepted,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/cisagov/clamav-report/pull/49
-citrusvanilla-tinyflux,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/citrusvanilla/tinyflux/pull/62
+citrusvanilla-tinyflux,project,PR Accepted,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/citrusvanilla/tinyflux/pull/62
 dundee-mypy2junit,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/dundee/mypy2junit/pull/7
 dvc94ch-pykicad,project,PR Accepted,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/dvc94ch/pykicad/pull/43
 geekscape-aiko_services,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/geekscape/aiko_services/pull/53
@@ -76,7 +76,7 @@ bohdanbobrowski-blog2epub,library,Not on GitHub,ItemInList,bs4/builder/_htmlpars
 robotools-extractor,library,PR Opened,ItemInList,defcon/tools/unicodeTools.py,305,https://github.com/robotools/defcon/pull/486
 robotools-extractor,library,PR Opened,ItemInList,defcon/tools/unicodeTools.py,313,https://github.com/robotools/defcon/pull/486
 tunakasif-torch-frft,library,False Positive,ItemInList,torch/_refs/__init__.py,544,
-Toilal-rebulk,project,PR Accepted,ItemInList,rebulk/utils.py,99,https://github.com/Toilal/rebulk/pull/30
+Toilal-rebulk,project,PR Opened,ItemInList,rebulk/utils.py,99,https://github.com/Toilal/rebulk/pull/30
 nedbat-coveragepy,library,PR Accepted,ItemInList,coverage/control.py,443,https://github.com/nedbat/coveragepy/pull/1932
 suds-community-suds,project,PR Accepted,ItemInList,suds/properties.py,74,https://github.com/suds-community/suds/pull/112
 marshmallow-code-apispec,project,PR Accepted,ItemInList,src/apispec/ext/marshmallow/common.py,105,https://github.com/marshmallow-code/apispec/pull/972

@@ -13,7 +13,7 @@ Rejected PRs: 2
 Accepted Bugs: 75
 Pending Bugs: 73
 Rejected Bugs: 8
-Resource Cleanup: 11
-Performance: 23
+Resource Cleanup: 12
+Performance: 22
 Call Ordering: 11
 API Recommendations: 30

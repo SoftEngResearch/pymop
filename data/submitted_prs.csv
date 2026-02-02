@@ -13,7 +13,7 @@ bjhall-upd,project,FileClosedAnalysis,https://github.com/bjhall/upd/pull/10,PR O
 by-cx-InvoiceGenerator,project,FileClosedAnalysis,https://github.com/by-cx/InvoiceGenerator/pull/55,PR Opened
 cernopendata-cernopendata-client,project,FileClosedAnalysis,https://github.com/cernopendata/cernopendata-client/pull/176,PR Opened
 cisagov-clamav-report,project,FileClosedAnalysis,https://github.com/cisagov/clamav-report/pull/49,PR Accepted
-citrusvanilla-tinyflux,project,FileClosedAnalysis,https://github.com/citrusvanilla/tinyflux/pull/62,PR Opened
+citrusvanilla-tinyflux,project,FileClosedAnalysis,https://github.com/citrusvanilla/tinyflux/pull/62,PR Accepted
 dundee-mypy2junit,project,FileClosedAnalysis,https://github.com/dundee/mypy2junit/pull/7,PR Opened
 dvc94ch-pykicad,project,FileClosedAnalysis,https://github.com/dvc94ch/pykicad/pull/43,PR Accepted
 geekscape-aiko_services,project,FileClosedAnalysis,https://github.com/geekscape/aiko_services/pull/53,PR Opened
@@ -43,7 +43,7 @@ benoitc-gunicorn,library,ItemInList,https://github.com/gevent/gevent/pull/2157,P
 Snowflake-Labs-geff,library,ItemInList,https://github.com/boto/botocore/pull/3622,PR Accepted
 JDArmy-TextWatermark,library,ItemInList,https://github.com/dynaconf/dynaconf/pull/1360,PR Accepted
 robotools-extractor,library,ItemInList,https://github.com/robotools/defcon/pull/486,PR Opened
-Toilal-rebulk,project,ItemInList,https://github.com/Toilal/rebulk/pull/30,PR Accepted
+Toilal-rebulk,project,ItemInList,https://github.com/Toilal/rebulk/pull/30,PR Opened
 nedbat-coveragepy,library,ItemInList,https://github.com/nedbat/coveragepy/pull/1932,PR Accepted
 suds-community-suds,project,ItemInList,https://github.com/suds-community/suds/pull/112,PR Accepted
 marshmallow-code-apispec,project,ItemInList,https://github.com/marshmallow-code/apispec/pull/972,PR Accepted
