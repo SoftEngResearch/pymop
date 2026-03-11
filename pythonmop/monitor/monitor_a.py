@@ -195,15 +195,23 @@ class MonitorA(Monitor):
             except AttributeError:
                 pass
 
-        # Update statistics for the event
+        # Add the event into the statistics.
         StatisticsSingleton().add_events(self.spec_name, event)
-        # Get matched categories from the formula handler transition
+
+        # Transit the state of the formula handler for the target parameter combination and get the matched categories.
         matched_categories = self.params_monitor[param].transition(event)
 
         # Execute the error handlers defined by the user.
         for matched_category in matched_categories:
+
+            # Check if the user has defined the error handler for the matched category
             if matched_category in self.error_handlers.keys():
-                # Extract the type of the params
+
+                # Skip the errors triggered by the PyMOP startup helper.
+                # if "pymop-startup-helper/sitecustomize.py" in file_name:
+                #     continue
+
+                # Extract the type of the target parameter combination
                 param_output = []
                 param_instances = param.split(',')
                 for param_instance in param_instances:
@@ -214,44 +222,37 @@ class MonitorA(Monitor):
                         param_type = '-'.join(param_parts[:-1])
                     param_output.append(param_type)
 
-                # Update statistics for the violation
-                violation_first_occurrence = StatisticsSingleton().add_violation(self.spec_name,
-                                                    f'last event: {event}, param: {param_output}, '
-                                                    f'message: {custom_message}, '
-                                                    f'file_name: {file_name}, line_num: {line_num}')
+                # Add the violation into the statistics.
+                violation_message = f'last event: {event}, param: {param_output}, message: {custom_message}, file_name: {file_name}, line_num: {line_num}'
+                violation_first_occurrence = StatisticsSingleton().add_violation(self.spec_name, violation_message)
 
-                # Get the error handler function
-                if violation_first_occurrence and self.print_violations_to_console:
+                # Execute the error handler defined by the user.
+                if violation_first_occurrence:
                     func = self.error_handlers[matched_category]
+                    # check if the number of parameters of the func is valid
                     num_params = func.__code__.co_argcount - 1  # Number of parameters the function takes
-                    if num_params == 2:
-                        func(file_name, line_num)  # Call the function with file name and line number
-                    elif num_params == 5:
-                        func(file_name, line_num, args, kwargs, custom_message)  # Call the function with additional args and kwargs
-                    else:
-                        func()  # Call the function without additional arguments
+                    return_message = None
+                    if num_params == 1:
+                        return_message = func(self.print_violations_to_console)
+                    elif num_params == 2 and self.print_violations_to_console:
+                        return_message = func(file_name, line_num)
+                    elif num_params == 3:
+                        return_message = func(file_name, line_num, self.print_violations_to_console)
+                    elif num_params == 5 and self.print_violations_to_console:
+                        return_message = func(file_name, line_num, args, kwargs, custom_message)
+                    elif num_params == 6:
+                        return_message = func(file_name, line_num, args, kwargs, custom_message, self.print_violations_to_console)
+                    elif self.print_violations_to_console:
+                        return_message = func()
+                    
+                    if return_message is not None:
+                        new_violation_message = f'last event: {event}, param: {param_output}, message: {return_message}, file_name: {file_name}, line_num: {line_num}'
+                        StatisticsSingleton().update_violation_message(self.spec_name, violation_message, new_violation_message)
 
-    # TODO: To be polished!
-    def _default_error_handler(self, event: str, matched_category: str, file_name: str, line_num: int, args: Any,
-                               kwargs: Any) -> None:
-        """Default error handler which writes the event and the category it matched into a trace file.
-
-        Args:
-            event: The event performed by the program.
-            matched_category: The category that the event matched.
-            file_name: The name of the file where the event is performed.
-            line_num: The line number of the method in the file where the event is performed.
-            args: The arguments passed into the method where the event is performed.
-            kwargs: The keyword arguments passed into the method where the event is performed.
-        """
-        # Open the trace file in append mode, creating it if it doesn't exist
-        with open('trace.txt', 'a') as trace_file:
-            # Construct the message to write into the file
-            message = (f"Event: {event} is matched to Category: {matched_category}. "
-                       f"Called from: {file_name}: line {line_num}. "
-                       f"args: {args}, kwargs {kwargs}\n")
-            # Write the message to the file
-            trace_file.write(message)
+            # If no error handler is defined, trigger the default error handler
+            else:
+                # TODO: Implement the default error handler. Comment out here!
+                pass
 
     def refresh_monitor(self):
         """Refresh the monitor state for a new test.

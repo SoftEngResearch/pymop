@@ -177,6 +177,7 @@ class StatisticsSingleton:
         if spec_name not in self.violations_dict:
             self.violations_dict[spec_name] = {}
 
+        # This give the path of the file where the violation occurred.
         violation_path = 'file_name: ' + violation.split('file_name: ')[1]
         target_violation = None
         for existing_violation in self.violations_dict[spec_name]:

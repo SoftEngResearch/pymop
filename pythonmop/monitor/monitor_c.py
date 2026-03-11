@@ -241,84 +241,48 @@ class MonitorC(Monitor):
 
         # Execute the error handlers defined by the user.
         for matched_category in matched_categories:
+
+            # Check if the user has defined the error handler for the matched category
             if matched_category in self.error_handlers.keys():
 
-                # TODO: Polish the default error handler. Comment out here!
-                # Execute the default error handler
-                # self._default_error_handler(event, matched_category, file_name, line_num, args, kwargs)
+                # Skip the errors triggered by the PyMOP startup helper.
+                # if "pymop-startup-helper/sitecustomize.py" in file_name:
+                #     continue
 
                 # Extract the type of the target parameter combination
                 spec_param_types = list(spec_comb.get_spec_param_type())
 
-                if "pymop-startup-helper/sitecustomize.py" in file_name:
+                # Add the violation into the statistics.
+                violation_message = f'last event: {event}, param: {spec_param_types}, message: {custom_message}, file_name: {file_name}, line_num: {line_num}'
+                violation_first_occurrence = StatisticsSingleton().add_violation(self.spec_name, violation_message)
+
+                # Execute the error handler defined by the user.
+                if violation_first_occurrence:
                     func = self.error_handlers[matched_category]
-
-                    # check if the func have 2 or 4 parameters
+                    # check if the number of parameters of the func is valid
                     num_params = func.__code__.co_argcount - 1
+                    return_message = None
                     if num_params == 1:
-                        func(self.print_violations_to_console)
+                        return_message = func(self.print_violations_to_console)
+                    elif num_params == 2 and self.print_violations_to_console:
+                        return_message = func(file_name, line_num)
                     elif num_params == 3:
-                        func(file_name, line_num, self.print_violations_to_console)
-                    elif num_params == 5:
-                        func(file_name, line_num, args, kwargs, custom_message)
+                        return_message = func(file_name, line_num, self.print_violations_to_console)
+                    elif num_params == 5 and self.print_violations_to_console:
+                        return_message = func(file_name, line_num, args, kwargs, custom_message)
                     elif num_params == 6:
-                        func(file_name, line_num, args, kwargs, custom_message, self.print_violations_to_console)
-                    else:
-                        func()
+                        return_message = func(file_name, line_num, args, kwargs, custom_message, self.print_violations_to_console)
+                    elif self.print_violations_to_console:
+                        return_message = func()
                     
-                else:
-                    # Add the violation into the statistics.
-                    violation_message = f'last event: {event}, param: {spec_param_types}, message: {custom_message}, file_name: {file_name}, line_num: {line_num}'
-                    violation_first_occurrence = StatisticsSingleton().add_violation(self.spec_name, violation_message)
+                    if return_message is not None:
+                        new_violation_message = f'last event: {event}, param: {spec_param_types}, message: {return_message}, file_name: {file_name}, line_num: {line_num}'
+                        StatisticsSingleton().update_violation_message(self.spec_name, violation_message, new_violation_message)
 
-                    # Execute the error handler defined by the user.
-                    if violation_first_occurrence:
-                        func = self.error_handlers[matched_category]
-                        # check if the number of parameters of the func is valid
-                        num_params = func.__code__.co_argcount - 1
-                        return_message = None
-                        if num_params == 1:
-                            return_message = func(self.print_violations_to_console)
-                        elif num_params == 2 and self.print_violations_to_console:
-                            return_message = func(file_name, line_num)
-                        elif num_params == 3:
-                            return_message = func(file_name, line_num, self.print_violations_to_console)
-                        elif num_params == 5 and self.print_violations_to_console:
-                            return_message = func(file_name, line_num, args, kwargs, custom_message)
-                        elif num_params == 6:
-                            return_message = func(file_name, line_num, args, kwargs, custom_message, self.print_violations_to_console)
-                        elif self.print_violations_to_console:
-                            return_message = func()
-                        
-                        if return_message is not None:
-                            new_violation_message = f'last event: {event}, param: {spec_param_types}, message: {return_message}, file_name: {file_name}, line_num: {line_num}'
-                            StatisticsSingleton().update_violation_message(self.spec_name, violation_message, new_violation_message)
-
-    def _default_error_handler(self, event: str, matched_category: str, file_name: str, line_num: int, args: Any,
-                               kwargs: Any) -> None:
-        """Default error handler which will write the event and the category it matched into a trace file.
-
-        Args:
-            event: The event performed by the program.
-            file_name: The name of the file where the event is performed.
-            line_num: The line number of the method in the file where the event is performed.
-            args: The arguments passed into the method where the event is performed.
-            kwargs: The keyword arguments passed into the method where the event is performed.
-        """
-
-        # Check if the trace file already existed
-        if os.path.isfile('trace.txt'):
-            trace_file = open('trace.txt', 'a')
-        else:
-            trace_file = open('trace.txt', 'a')
-
-        # Write the trace into the file
-        message = (f"Event: {event} is matched to Category: {matched_category}. Called from: {file_name}: "
-                   f"line {line_num}. args: {args}, kwargs {kwargs}\n")
-        trace_file.write(message)
-
-        # Close the trace file
-        trace_file.close()
+            # If no error handler is defined, trigger the default error handler
+            else:
+                # TODO: Implement the default error handler. Comment out here!
+                pass
 
     def refresh_monitor(self):
         """Refresh the monitor state for new test.
