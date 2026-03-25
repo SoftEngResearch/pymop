@@ -11,7 +11,7 @@
 - [System Requirements](#system-requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Environment Variables](#environment-variables)
+- [Configuration Variables](#configuration-variables)
 - [Output Structure](#output-structure)
 - [Run PyMOP on an open-source project](#run-pymop-on-an-open-source-project)
 - [Contributing](#contributing)
@@ -427,7 +427,7 @@ To run PyMOP without Docker, make sure your system satisfies the requirements li
 
 ## Usage
 
-After installation, PyMOP requires setting the `PYTHONPATH` environment variable before running tests. Additional configuration options are available via environment variables (see [Environment Variables](#environment-variables) section below).
+After installation, PyMOP requires setting the `PYTHONPATH` environment variable before running tests. Additional configuration options are read first from a `.pymop_env` file in your working directory; if that file is not present, PyMOP falls back to environment variables (see [Configuration Variables](#configuration-variables) section below).
 
 > **Important:** When using PyMOP, you must set the `PYTHONPATH` environment variable to include the `pymop-startup-helper` directory. This is required for PyMOP to function correctly:
 >
@@ -438,16 +438,23 @@ After installation, PyMOP requires setting the `PYTHONPATH` environment variable
 >
 > The path should point to the `pymop-startup-helper` directory inside the `pymop/pythonmop` folder of your PyMOP installation. This `PYTHONPATH` setting is required for all instrumentation strategies and must be set before running pytest.
 
-## Environment Variables
+## Configuration Variables
 
-PyMOP can be configured using environment variables that allow you to customize how it behaves during test runs:
+PyMOP reads configuration first from a `.pymop_env` file (in the current working directory). If the file is not present, PyMOP falls back to `PYMOP_*` environment variables.
+
+You can provide these options in either of the following ways:
+
+1. A `.pymop_env` file (placed in the current working directory, i.e., where you run `pytest`).
+2. Environment variables (e.g., `export PYMOP_ALGO=D`).
+
+If `.pymop_env` exists, PyMOP reads configuration from that file. If it does not exist, PyMOP falls back to environment variables.
 
 ### Core Configuration
 
 **`PYMOP_SPEC_FOLDER`**: Path to the specification folder to be used for the current run.
 
 ```bash
-export PYMOP_SPEC_FOLDER=/path/to/specs
+PYMOP_SPEC_FOLDER=/path/to/specs
 ```
 
 **DEFAULT**: When not provided, the framework will run the tests without performing any runtime verification checks
@@ -455,7 +462,7 @@ export PYMOP_SPEC_FOLDER=/path/to/specs
 **`PYMOP_ACTIVE_SPECS`**: The names of the specifications to be checked.
 
 ```bash
-export PYMOP_ACTIVE_SPECS=Spec1,Spec2
+PYMOP_ACTIVE_SPECS=Spec1,Spec2
 ```
 
 **DEFAULT**: When set to `all` or not provided, all specifications in the folder will be used.
@@ -463,7 +470,7 @@ export PYMOP_ACTIVE_SPECS=Spec1,Spec2
 **`PYMOP_ALGO`**: The name of the parametric algorithm to be used.
 
 ```bash
-export PYMOP_ALGO=D
+PYMOP_ALGO=D
 ```
 
 Five algorithms are available: `A`, `B`, `C`, `C+`, and `D`. Algorithm `D` is the default algorithm and represents the most complex and comprehensive implementation in PyMOP. You can experiment with other algorithms, though note that there may be performance differences.
@@ -471,7 +478,7 @@ Five algorithms are available: `A`, `B`, `C`, `C+`, and `D`. Algorithm `D` is th
 **`PYMOP_INSTRUMENTATION_STRATEGY`**: Choose the instrumentation strategy to be used.
 
 ```bash
-export PYMOP_INSTRUMENTATION_STRATEGY=ast
+PYMOP_INSTRUMENTATION_STRATEGY=ast
 ```
 
 The options are `ast` or `builtin`. Each instrumentation strategy has different benefits and trade-offs. Choose the one that best suits your needs (`ast` is used by default).
@@ -479,7 +486,7 @@ The options are `ast` or `builtin`. Each instrumentation strategy has different 
 **`PYMOP_INSTRUMENT_SITE_PACKAGES`**: Choose whether to instrument site-packages or not.
 
 ```bash
-export PYMOP_INSTRUMENT_SITE_PACKAGES=true
+PYMOP_INSTRUMENT_SITE_PACKAGES=true
 ```
 
 When enabled, PyMOP will instrument code in site-packages directories. This can be slow and take more time for the runtime verification checks to run.
@@ -493,7 +500,7 @@ When enabled, PyMOP will instrument code in site-packages directories. This can 
 **`PYMOP_PRINT_VIOLATIONS_TO_CONSOLE`**: Prints violation messages to the terminal at runtime.
 
 ```bash
-export PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=true
+PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=true
 ```
 
 When set to `true`, violation messages will be printed to the terminal during test execution.
@@ -503,7 +510,7 @@ When set to `true`, violation messages will be printed to the terminal during te
 **`PYMOP_STATISTICS`**: Prints statistics about monitors and events.
 
 ```bash
-export PYMOP_STATISTICS=true
+PYMOP_STATISTICS=true
 ```
 
 When enabled, the plugin will print additional statistics about the runtime verification results, including monitors created and events triggered.
@@ -513,7 +520,7 @@ When enabled, the plugin will print additional statistics about the runtime veri
 **`PYMOP_STATISTICS_FILE`**: Specifies the file path where monitor and event statistics will be stored.
 
 ```bash
-export PYMOP_STATISTICS_FILE=/path/to/stats.json
+PYMOP_STATISTICS_FILE=/path/to/stats.json
 ```
 
 The file can be either a JSON file or a text file. If not provided, the statistics will be printed to the terminal.
@@ -523,7 +530,7 @@ The file can be either a JSON file or a text file. If not provided, the statisti
 **`PYMOP_DEBUG_MSG`**: Prints debug messages for testing purposes.
 
 ```bash
-export PYMOP_DEBUG_MSG=true
+PYMOP_DEBUG_MSG=true
 ```
 
 When enabled, PyMOP will print debug messages that can help with troubleshooting and development.
@@ -533,7 +540,7 @@ When enabled, PyMOP will print debug messages that can help with troubleshooting
 **`PYMOP_SPEC_INFO`**: Prints the descriptions of specifications in the spec folder.
 
 ```bash
-export PYMOP_SPEC_INFO=true
+PYMOP_SPEC_INFO=true
 ```
 
 When enabled, PyMOP will print detailed descriptions of all specifications found in the spec folder (without running the tests).
@@ -545,7 +552,7 @@ When enabled, PyMOP will print detailed descriptions of all specifications found
 **`PYMOP_CONVERT_SPECS`**: Converts front-end specifications to PyMOP internal specifications for correct usage.
 
 ```bash
-export PYMOP_CONVERT_SPECS=true
+PYMOP_CONVERT_SPECS=true
 ```
 
 **DEFAULT**: When not set or set to `false`, specification conversion will not be performed.
@@ -553,20 +560,51 @@ export PYMOP_CONVERT_SPECS=true
 **`PYMOP_NO_GARBAGE_COLLECTION`**: Disables garbage collection for the index tree used by PyMOP to store monitors and track events.
 
 ```bash
-export PYMOP_NO_GARBAGE_COLLECTION=true
+PYMOP_NO_GARBAGE_COLLECTION=true
 ```
 
 When enabled, PyMOP will skip garbage collection for the index tree used internally. This may lead to worse performance and increased memory usage.
 
 **DEFAULT**: When not set or set to `false`, garbage collection is enabled.
 
-### Example: Using Multiple Environment Variables
+---
+
+### Example: Using `.pymop_env` (Recommended)
+
+Create a `.pymop_env` file in the directory where you run `pytest` (it uses the same `PYMOP_*` keys as environment variables, one `KEY=value` pair per line).
+
+For example:
+
+```bash
+# .pymop_env example
+PYMOP_SPEC_FOLDER=/path/to/specs
+PYMOP_ACTIVE_SPECS=Spec1,Spec2
+PYMOP_ALGO=D
+PYMOP_INSTRUMENTATION_STRATEGY=ast
+PYMOP_STATISTICS=true
+PYMOP_STATISTICS_FILE=/path/to/stats.json
+```
+
+An example file is also provided: [.pymop_env](./.pymop_env)
+
+Run:
 
 ```bash
 # Required: Set PYTHONPATH to include pymop-startup-helper
 export PYTHONPATH=/path/to/pymop/pythonmop/pymop-startup-helper
 
-# Configure PyMOP options
+# Run tests
+pytest tests
+```
+
+---
+### Example: Using Environment Variables
+
+```bash
+# Required: Set PYTHONPATH to include pymop-startup-helper
+export PYTHONPATH=/path/to/pymop/pythonmop/pymop-startup-helper
+
+# Pymop configure options example
 export PYMOP_SPEC_FOLDER=/path/to/specs
 export PYMOP_ACTIVE_SPECS=Spec1,Spec2
 export PYMOP_ALGO=D
@@ -608,7 +646,7 @@ This section will guide you through how to run PyMOP on an open-source project. 
 
    # Install project dependencies
    pip install .
-   pip install mock setuptools pytest
+   pip install mock==5.2.0 setuptools==80.10.2 pytest
 
    # Run original test (Optional)
    pytest tests
@@ -623,34 +661,165 @@ This section will guide you through how to run PyMOP on an open-source project. 
 
 3. Run PyMOP with the `omergertel/pyformance` project using all the specifications in the `~/pymop/specs-new` folder.
 
-   You can run PyMOP using one of the following commands:
+   You can run PyMOP using either of the following configuration styles.
 
-   a. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm D without monitoring libraries (recommended)
+   ---
+   ### Example: Using `.pymop_env` (Recommended)
+   Create a `.pymop_env` file in the directory where you run `pytest` (same directory as your `tests/` folder). Also set `PYTHONPATH`:
    ```bash
-   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=D PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_STATISTICS=yes PYMOP_STATISTICS_FILE=D.json PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest tests
+   export PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/
    ```
 
-   b. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm C without monitoring libraries
+   a. Run with monkey patching + AST instrumentation strategy, parametric algorithm D, without monitoring libraries (Recommended)
+
+   Put the following in `.pymop_env`:
    ```bash
-   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=C PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_STATISTICS=yes PYMOP_STATISTICS_FILE=C.json PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest tests
+   # .pymop_env
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   PYMOP_ALGO=D
+   PYMOP_INSTRUMENTATION_STRATEGY=ast
+   PYMOP_STATISTICS=yes
+   PYMOP_STATISTICS_FILE=D.json
    ```
 
-   c. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm D without monitoring libraries while printing the violations (if any) during test execution to the terminal
+   Then run:
    ```bash
-   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=D PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=yes PYMOP_STATISTICS=yes PYMOP_STATISTICS_FILE=D.json PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest -s tests
+   pytest tests
    ```
 
-   d. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm D without monitoring libraries while printing the violations at the end of the test execution to the terminal
+   b. Run with monkey patching + AST instrumentation strategy, parametric algorithm C, without monitoring libraries
+
+   Put the following in `.pymop_env`:
    ```bash
-   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=D PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=yes PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest -s tests
+   # .pymop_env
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   PYMOP_ALGO=C
+   PYMOP_INSTRUMENTATION_STRATEGY=ast
+   PYMOP_STATISTICS=yes
+   PYMOP_STATISTICS_FILE=C.json
    ```
 
-   e. Run with **monkey patching + AST** instrumentation strategy and parametric algorithm D with libraries monitored
+   Then run:
    ```bash
-   PYMOP_SPEC_FOLDER=~/pymop/specs-new PYMOP_ALGO=D PYMOP_INSTRUMENTATION_STRATEGY=ast PYMOP_INSTRUMENT_SITE_PACKAGES=yes PYMOP_STATISTICS=yes PYMOP_STATISTICS_FILE=D.json PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/ pytest tests
+   pytest tests
    ```
 
-More options can be found in the [Environment Variables](#environment-variables) section.
+   c. Run with monkey patching + AST instrumentation strategy, parametric algorithm D, without monitoring libraries, print violations during execution
+
+   Put the following in `.pymop_env`:
+   ```bash
+   # .pymop_env
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   PYMOP_ALGO=D
+   PYMOP_INSTRUMENTATION_STRATEGY=ast
+   PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=yes
+   PYMOP_STATISTICS=yes
+   PYMOP_STATISTICS_FILE=D.json
+   ```
+
+   Then run:
+   ```bash
+   pytest -s tests
+   ```
+
+   d. Run with monkey patching + AST instrumentation strategy, parametric algorithm D, without monitoring libraries, print violations at the end
+
+   Put the following in `.pymop_env`:
+   ```bash
+   # .pymop_env
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   PYMOP_ALGO=D
+   PYMOP_INSTRUMENTATION_STRATEGY=ast
+   PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=yes
+   ```
+
+   Then run:
+   ```bash
+   pytest -s tests
+   ```
+
+   e. Run with monkey patching + AST instrumentation strategy, parametric algorithm D, with libraries monitored
+
+   Put the following in `.pymop_env`:
+   ```bash
+   # .pymop_env
+   PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   PYMOP_ALGO=D
+   PYMOP_INSTRUMENTATION_STRATEGY=ast
+   PYMOP_INSTRUMENT_SITE_PACKAGES=yes
+   PYMOP_STATISTICS=yes
+   PYMOP_STATISTICS_FILE=D.json
+   ```
+
+   Then run:
+   ```bash
+   pytest tests
+   ```
+
+   ---
+   ### Example: Using `export` commands
+   a. Run with monkey patching + AST instrumentation strategy, parametric algorithm D, without monitoring libraries (Recommended)
+   ```bash
+   export PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/
+   export PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   export PYMOP_ALGO=D
+   export PYMOP_INSTRUMENTATION_STRATEGY=ast
+   export PYMOP_STATISTICS=yes
+   export PYMOP_STATISTICS_FILE=D.json
+
+   pytest tests
+   ```
+
+   b. Run with monkey patching + AST instrumentation strategy, parametric algorithm C, without monitoring libraries
+   ```bash
+   export PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/
+   export PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   export PYMOP_ALGO=C
+   export PYMOP_INSTRUMENTATION_STRATEGY=ast
+   export PYMOP_STATISTICS=yes
+   export PYMOP_STATISTICS_FILE=C.json
+
+   pytest tests
+   ```
+
+   c. Run with monkey patching + AST instrumentation strategy, parametric algorithm D, without monitoring libraries, print violations during execution
+   ```bash
+   export PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/
+   export PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   export PYMOP_ALGO=D
+   export PYMOP_INSTRUMENTATION_STRATEGY=ast
+   export PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=yes
+   export PYMOP_STATISTICS=yes
+   export PYMOP_STATISTICS_FILE=D.json
+
+   pytest -s tests
+   ```
+
+   d. Run with monkey patching + AST instrumentation strategy, parametric algorithm D, without monitoring libraries, print violations at the end
+   ```bash
+   export PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/
+   export PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   export PYMOP_ALGO=D
+   export PYMOP_INSTRUMENTATION_STRATEGY=ast
+   export PYMOP_PRINT_VIOLATIONS_TO_CONSOLE=yes
+
+   pytest -s tests
+   ```
+
+   e. Run with monkey patching + AST instrumentation strategy, parametric algorithm D, with libraries monitored
+   ```bash
+   export PYTHONPATH=~/pymop/pythonmop/pymop-startup-helper/
+   export PYMOP_SPEC_FOLDER=~/pymop/specs-new
+   export PYMOP_ALGO=D
+   export PYMOP_INSTRUMENTATION_STRATEGY=ast
+   export PYMOP_INSTRUMENT_SITE_PACKAGES=yes
+   export PYMOP_STATISTICS=yes
+   export PYMOP_STATISTICS_FILE=D.json
+
+   pytest tests
+   ```
+
+More options can be found in the [Configuration Variables](#configuration-variables) section.
 
 ## Contributing
 
