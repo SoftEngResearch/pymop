@@ -24,7 +24,7 @@ from setuptools import setup, find_packages  # , Extension
 # )
 
 setup(
-    name = 'PyMOP',
+    name = 'pytest-pythonmop',
     version = '1.1.0',
     author = 'Stephen Shen, Mohammed Yaseen, Kevin Guan, Denini Gabriel, Junho Lee, Marcelo d\'Amorim, Owolabi Legunsen',
     author_email = 'zs435@cornell.edu, moha.98.1900@gmail.com, kzg5@cornell.edu, dgs@cin.ufpe.br, yax3ad@virginia.edu, mdamori@ncsu.edu, legunsen@cornell.edu',
