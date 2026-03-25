@@ -21,6 +21,8 @@ import atexit
 import copy
 import uuid
 
+from dotenv import load_dotenv, dotenv_values  # type: ignore
+
 
 print(r"""
 ____  __   __  __   __  ___   ____ 
@@ -30,7 +32,7 @@ ____  __   __  __   __  ___   ____
 |_|      |_|   |_|  |_| \___/ |_|
 
 Welcome to PYMOP - Python Monitoring-Oriented Programming
-Version: 1.0.1
+Version: 1.1.0
 """)
 
 
@@ -38,7 +40,7 @@ Version: 1.0.1
 ##                      Read Environment Variables                            ##
 ################################################################################
 '''
-Read options from env variables
+Read options from .pymop_env file or env variables as fallback
 
 PYMOP_SPEC_FOLDER: Path to the spec folder to be used for the current run
 PYMOP_ACTIVE_SPECS: The names of the specs to be checked (all for using all specs)
@@ -56,7 +58,27 @@ PYMOP_NO_GARBAGE_COLLECTION: Perform garbage collection for the index tree.
 PYMOP_PRINT_VIOLATIONS_TO_CONSOLE: Print the violations to the console at runtime.
 PYMOP_INSTRUMENTATION_STRATEGY: Choose the instrumentation strategy to be used. The options are 'builtin' or 'ast'.
 '''
-def parse_bool(value):
+# Check if the .pymop_env file exists and read the values from it
+_pymop_env_path = os.path.join(os.getcwd(), ".pymop_env")
+_pymop_env_file = _pymop_env_path if os.path.exists(_pymop_env_path) else None
+_pymop_dotenv_values = {}
+_pymop_dotenv_status = False
+
+if _pymop_env_file:
+    load_dotenv(dotenv_path=_pymop_env_file, override=False)
+    try:
+        _pymop_dotenv_values = dotenv_values(dotenv_path=_pymop_env_file)
+        _pymop_dotenv_status = True
+    except Exception:
+        _pymop_dotenv_values = {}
+        _pymop_dotenv_status = False
+        print(f"✘ Failed to read the .pymop_env file. Please check if the file is valid.")
+        sys.exit(1)
+
+def _parse_bool(value):
+    '''
+    Parse the boolean value from the string. The accepted values are 'true', 'false', '1', '0', 'yes', 'no', 'y', 'n'.
+    '''
     if value is None or not isinstance(value, str):
         return value
 
@@ -67,23 +89,34 @@ def parse_bool(value):
     else:
         raise ValueError(f"Invalid boolean value: {value}")
 
-spec_folder = os.getenv("PYMOP_SPEC_FOLDER") or None
-spec_names = os.getenv("PYMOP_ACTIVE_SPECS") or 'all'
-algo = os.getenv("PYMOP_ALGO") or None
-info = parse_bool(os.getenv("PYMOP_SPEC_INFO")) or False
-debug_msg = parse_bool(os.getenv("PYMOP_DEBUG_MSG")) or False
-detailed_msg = parse_bool(os.getenv("PYMOP_DETAILED_MSG")) or False
-statistics = parse_bool(os.getenv("PYMOP_STATISTICS")) or False
-statistics_file = os.getenv("PYMOP_STATISTICS_FILE") or None
-noprint = parse_bool(os.getenv("PYMOP_NO_PRINT")) or False
-convert_specs = parse_bool(os.getenv("PYMOP_CONVERT_SPECS")) or False
-instrument_pymop = parse_bool(os.getenv("PYMOP_INSTRUMENT_PYMOP")) or False
-instrument_pytest = parse_bool(os.getenv("PYMOP_INSTRUMENT_PYTEST")) or False
-instrument_site_packages = parse_bool(os.getenv("PYMOP_INSTRUMENT_SITE_PACKAGES")) or False
-instrument_python_source_code = parse_bool(os.getenv("PYMOP_INSTRUMENT_PYTHON_SOURCE_CODE")) or False
-no_garbage_collection = parse_bool(os.getenv("PYMOP_NO_GARBAGE_COLLECTION")) or False
-print_violations_to_console = parse_bool(os.getenv("PYMOP_PRINT_VIOLATIONS_TO_CONSOLE")) or False
-instrument_strategy = os.getenv("PYMOP_INSTRUMENTATION_STRATEGY") or "ast"
+def _pymop_env_get(key):
+    '''
+    Get the value of the key from the .pymop_env file or environment variables as fallback.
+    '''
+    # Check if dotenv values are available
+    if _pymop_dotenv_status:
+        return _pymop_dotenv_values.get(key)
+    # Check if env variables are available as fallback
+    return os.environ.get(key)
+
+# Get the values from the .pymop_env file or environment variables.
+spec_folder = _pymop_env_get("PYMOP_SPEC_FOLDER") or None
+spec_names = _pymop_env_get("PYMOP_ACTIVE_SPECS") or 'all'
+algo = _pymop_env_get("PYMOP_ALGO") or 'D'
+info = _parse_bool(_pymop_env_get("PYMOP_SPEC_INFO")) or False
+debug_msg = _parse_bool(_pymop_env_get("PYMOP_DEBUG_MSG")) or False
+detailed_msg = _parse_bool(_pymop_env_get("PYMOP_DETAILED_MSG")) or False
+statistics = _parse_bool(_pymop_env_get("PYMOP_STATISTICS")) or False
+statistics_file = _pymop_env_get("PYMOP_STATISTICS_FILE") or None
+noprint = _parse_bool(_pymop_env_get("PYMOP_NO_PRINT")) or False
+convert_specs = _parse_bool(_pymop_env_get("PYMOP_CONVERT_SPECS")) or False
+instrument_pymop = _parse_bool(_pymop_env_get("PYMOP_INSTRUMENT_PYMOP")) or False
+instrument_pytest = _parse_bool(_pymop_env_get("PYMOP_INSTRUMENT_PYTEST")) or False
+instrument_site_packages = _parse_bool(_pymop_env_get("PYMOP_INSTRUMENT_SITE_PACKAGES")) or False
+instrument_python_source_code = _parse_bool(_pymop_env_get("PYMOP_INSTRUMENT_PYTHON_SOURCE_CODE")) or False
+no_garbage_collection = _parse_bool(_pymop_env_get("PYMOP_NO_GARBAGE_COLLECTION")) or False
+print_violations_to_console = _parse_bool(_pymop_env_get("PYMOP_PRINT_VIOLATIONS_TO_CONSOLE")) or False
+instrument_strategy = _pymop_env_get("PYMOP_INSTRUMENTATION_STRATEGY") or "ast"
 
 ################################################################################
 ##                            AST Instrumentation                             ##
@@ -1667,6 +1700,12 @@ def init_pymop():
 
     # Print out configuration message title
     print("============================ PyMOP Configuration ============================\n")
+
+    if _pymop_dotenv_status:
+        print("✔ PyMOP configuration read from .pymop_env file.")
+    else:
+        print("✘ PyMOP configuration read from .pymop_env file. Using values from environment variables.")
+    print()
 
     # Set the instrumentation strategy.
     if instrument_strategy == "builtin":

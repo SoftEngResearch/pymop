@@ -2,6 +2,7 @@ pytest
 JPype1
 nltk
 numpy
+python-dotenv
 # forbiddenfruit
 # pytest-asyncio==0.23.8
 # requests
