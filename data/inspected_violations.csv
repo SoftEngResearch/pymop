@@ -8,7 +8,7 @@ Arcadia-Science-readlif,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-sta
 Building-Transparency-ECHO-schema,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/Building-Transparency/ECHO-schema/pull/5
 CMakePP-CMinx,project,PR Accepted,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/CMakePP/CMinx/pull/175
 DCZYewen-Python-Silk-Module,project,PR Accepted,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/DCZYewen/Python-Silk-Module/pull/12
-K0lb3-UnityPy,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/K0lb3/UnityPy/pull/358
+K0lb3-UnityPy,project,PR Accepted,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/K0lb3/UnityPy/pull/358
 OnroerendErfgoed-skosprovider_rdf,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/OnroerendErfgoed/skosprovider_rdf/pull/132
 SigmaHQ-pySigma,project,PR Accepted,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/SigmaHQ/pySigma/pull/438
 bcwaldon-warlock,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/bcwaldon/warlock/pull/70
@@ -26,7 +26,7 @@ intezer-analyze-python-sdk,project,PR Accepted,FileClosedAnalysis,pythonmop/pymo
 lsst-ts-ts_xml,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/lsst-ts/ts_xml/pull/1054
 macbre-mediawiki-dump,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/macbre/mediawiki-dump/pull/302
 microscopexyz-chainmetareader,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/microscopexyz/chainmetareader/pull/106
-ncrocfer-whatportis,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/ncrocfer/whatportis/pull/25/changes
+ncrocfer-whatportis,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/ncrocfer/whatportis/pull/25
 omergertel-pyformance,project,PR Opened,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/omergertel/pyformance/pull/82
 passaH2O-dorado,project,PR Accepted,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/passaH2O/dorado/pull/59
 sckott-habanero,project,PR Accepted,FileClosedAnalysis,pythonmop/pymop-startup-helper/sitecustomize.py,1901,https://github.com/sckott/habanero/pull/206
@@ -36,7 +36,7 @@ PaloAltoNetworks-xsoar-panos-upgrade-automation,project,PR Opened,FileClosedAnal
 tigrus-dadata-python,project,PR Opened,HostnamesTerminatesWithSlash,tests/test_address.py,105,https://github.com/tigrus/dadata-python/pull/4
 psf-requests,library,PR Accepted,HostnamesTerminatesWithSlash,tests/test_requests.py,1620,https://github.com/psf/requests/pull/6936
 intuit-mastko,project,PR Opened,InPlaceSortAnalysis,mastko/lib/aws_cidr.py,67,https://github.com/intuit/mastko/pull/3
-jgressier-cfdtools,project,PR Opened,InPlaceSortAnalysis,cfdtools/meshbase/_connectivity.py,280,https://github.com/jgressier/cfdtools/pull/57
+jgressier-cfdtools,project,PR Accepted,InPlaceSortAnalysis,cfdtools/meshbase/_connectivity.py,280,https://github.com/jgressier/cfdtools/pull/57
 neulab-compare-mt,project,False Positive,InPlaceSortAnalysis,compare_mt/compare_mt_main.py,456,
 AliAkhtari78-SpotifyScraper,library,Not on GitHub,InPlaceSortAnalysis,bs4/dammit.py,158,
 AlvaroMenduina-ZERN,library,False Positive,InPlaceSortAnalysis,pyparsing/util.py,273,
@@ -63,7 +63,7 @@ jessizanelato-desafio-fifa,project,PR Opened,ItemInList,main.py,56,https://githu
 jgressier-cfdtools,project,False Positive,ItemInList,cfdtools/gmsh/reader.py,248,
 jgressier-cfdtools,project,False Positive,ItemInList,cfdtools/gmsh/reader.py,288,
 samdmarshall-pbPlist,project,PR Opened,ItemInList,pbPlist/pbRoot.py,74,https://github.com/samdmarshall/pbPlist/pull/12
-Azure-azure-iot-hub-python,library,PR Opened,ItemInList,msrest/universal_http/requests.py,351,https://github.com/Azure/msrest-for-python/pull/266
+Azure-azure-iot-hub-python,library,PR Rejected,ItemInList,msrest/universal_http/requests.py,351,https://github.com/Azure/msrest-for-python/pull/266
 EigenPro-EigenPro,library,False Positive,ItemInList,torch/_refs/__init__.py,587,
 JDArmy-TextWatermark,library,PR Accepted,ItemInList,dynaconf/base.py,306,https://github.com/dynaconf/dynaconf/pull/1360
 Parsely-streamparse,library,No Longer Maintan,ItemInList,ply/yacc.py,2292,
@@ -73,8 +73,8 @@ Snowflake-Labs-geff,library,PR Accepted,ItemInList,botocore/loaders.py,408,https
 analogdevicesinc-ai8x-synthesis,library,False Positive,ItemInList,torch/_refs/__init__.py,520,
 benoitc-gunicorn,library,PR Opened,ItemInList,gevent/_socket3.py,661,https://github.com/gevent/gevent/pull/2157
 bohdanbobrowski-blog2epub,library,Not on GitHub,ItemInList,bs4/builder/_htmlparser.py,213,
-robotools-extractor,library,PR Opened,ItemInList,defcon/tools/unicodeTools.py,305,https://github.com/robotools/defcon/pull/486
-robotools-extractor,library,PR Opened,ItemInList,defcon/tools/unicodeTools.py,313,https://github.com/robotools/defcon/pull/486
+robotools-extractor,library,PR Accepted,ItemInList,defcon/tools/unicodeTools.py,305,https://github.com/robotools/defcon/pull/486
+robotools-extractor,library,PR Accepted,ItemInList,defcon/tools/unicodeTools.py,313,https://github.com/robotools/defcon/pull/486
 tunakasif-torch-frft,library,False Positive,ItemInList,torch/_refs/__init__.py,544,
 Toilal-rebulk,project,PR Opened,ItemInList,rebulk/utils.py,99,https://github.com/Toilal/rebulk/pull/30
 nedbat-coveragepy,library,PR Accepted,ItemInList,coverage/control.py,443,https://github.com/nedbat/coveragepy/pull/1932
@@ -207,11 +207,11 @@ andr1an-nic-api,project,PR Accepted,Requests_MustCloseSession,pythonmop/pymop-st
 Significant-Gravitas-Auto-GPT-Plugins,library,False Positive,Requests_PreparedRequestInit,requests/sessions.py,242,
 EDCD-EDMarketConnector,project,Fixed in latest version,StringConcatAnalysis,config/linux.py,84,
 EDCD-EDMarketConnector,project,Fixed in latest version,StringConcatAnalysis,config/linux.py,87,
-SasView-sasdata,project,PR Opened,StringConcatAnalysis,sasdata/data_util/nxsunit.py,319,https://github.com/SasView/sasdata/pull/185
-SasView-sasdata,project,PR Opened,StringConcatAnalysis,sasdata/dataloader/readers/cansas_reader.py,194,https://github.com/SasView/sasdata/pull/185
+SasView-sasdata,project,PR Accepted,StringConcatAnalysis,sasdata/data_util/nxsunit.py,319,https://github.com/SasView/sasdata/pull/185
+SasView-sasdata,project,PR Accepted,StringConcatAnalysis,sasdata/dataloader/readers/cansas_reader.py,194,https://github.com/SasView/sasdata/pull/185
 SigmaHQ-pySigma,project,PR Accepted,StringConcatAnalysis,sigma/types.py,169,https://github.com/SigmaHQ/pySigma/pull/436
 holgern-pynostr,project,False Positive,StringConcatAnalysis,pynostr/bech32.py,76,
-jgressier-cfdtools,project,PR Opened,StringConcatAnalysis,cfdtools/ic3/_ic3.py,272,https://github.com/jgressier/cfdtools/pull/58
+jgressier-cfdtools,project,PR Accepted,StringConcatAnalysis,cfdtools/ic3/_ic3.py,272,https://github.com/jgressier/cfdtools/pull/58
 mondeja-mkdocs-include-markdown-plugin,project,PR Accepted,StringConcatAnalysis,src/mkdocs_include_markdown_plugin/directive.py,162,https://github.com/mondeja/mkdocs-include-markdown-plugin/pull/288
 mondeja-mkdocs-include-markdown-plugin,project,PR Accepted,StringConcatAnalysis,src/mkdocs_include_markdown_plugin/directive.py,150,https://github.com/mondeja/mkdocs-include-markdown-plugin/pull/288
 mondeja-mkdocs-include-markdown-plugin,project,PR Accepted,StringConcatAnalysis,src/mkdocs_include_markdown_plugin/process.py,219,https://github.com/mondeja/mkdocs-include-markdown-plugin/pull/288
@@ -220,7 +220,7 @@ mondeja-mkdocs-include-markdown-plugin,project,PR Accepted,StringConcatAnalysis,
 mondeja-mkdocs-include-markdown-plugin,project,PR Accepted,StringConcatAnalysis,src/mkdocs_include_markdown_plugin/event.py,284,https://github.com/mondeja/mkdocs-include-markdown-plugin/pull/288
 mondeja-mkdocs-include-markdown-plugin,project,PR Accepted,StringConcatAnalysis,src/mkdocs_include_markdown_plugin/directive.py,159,https://github.com/mondeja/mkdocs-include-markdown-plugin/pull/288
 mondeja-mkdocs-include-markdown-plugin,project,PR Accepted,StringConcatAnalysis,src/mkdocs_include_markdown_plugin/directive.py,160,https://github.com/mondeja/mkdocs-include-markdown-plugin/pull/288
-python-periodictable-periodictable,project,PR Opened,StringConcatAnalysis,periodictable/util.py,50,https://github.com/python-periodictable/periodictable/pull/112
+python-periodictable-periodictable,project,PR Accepted,StringConcatAnalysis,periodictable/util.py,50,https://github.com/python-periodictable/periodictable/pull/112
 samdmarshall-pbPlist,project,False Positive,StringConcatAnalysis,pbPlist/StrParse.py,273,
 samdmarshall-pbPlist,project,False Positive,StringConcatAnalysis,pbPlist/pbItem.py,124,
 samdmarshall-pbPlist,project,PR Opened,StringConcatAnalysis,pbPlist/StrParse.py,354,https://github.com/samdmarshall/pbPlist/pull/13
@@ -261,7 +261,7 @@ mlederbauer-glossagen,library,False Positive,StringConcatAnalysis,_pytest/assert
 mondeja-mkdocs-include-markdown-plugin,library,False Positive,StringConcatAnalysis,markdown/serializers.py,170,
 mondeja-mkdocs-include-markdown-plugin,library,False Positive,StringConcatAnalysis,markdown/serializers.py,138,
 ombhojane-explainableai,library,False Positive,StringConcatAnalysis,dask/utils.py,888,
-paulromano-endf-python,library,PR Opened,StringConcatAnalysis,endf/material.py,162,https://github.com/paulromano/endf-python/pull/30
+paulromano-endf-python,library,PR Accepted,StringConcatAnalysis,endf/material.py,162,https://github.com/paulromano/endf-python/pull/30
 leezythu-UCTR,project,False Positive,StringStripAnalysis,TAT-QA/tatqa/tatqa_utils.py,142,
 benoitc-gunicorn,library,False Positive,StringStripAnalysis,gunicorn/http/message.py,114,
 mercedes-benz-selfsupervised_flow,project,PR Opened,TfFunction_NoSideEffect,unsup_flow/tf/relaxed_tf_function_test.py,16,https://github.com/mercedes-benz/selfsupervised_flow/pull/21
