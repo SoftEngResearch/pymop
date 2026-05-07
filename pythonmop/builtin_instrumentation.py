@@ -451,40 +451,37 @@ builtins.__build_class__ = custom_build_class
 # fp.on_return(on_return) # <- on_return is broken (throws segfault)
 
 pymop_custom_types = (InstrumentableList, InstrumentedArray, InstrumentedDict, InstrumentedSet)
-def customIsinstance(object, type_to_check):
-    if any(t is type_to_check for t in pymop_custom_types) or type_to_check is tuple or type(type_to_check) is types.UnionType:
-        if original__isinstance(type_to_check, tuple):
-            # replace the list if found in the tuple with the original list
-            type_to_check = tuple(
-                [
-                    original__list if x is InstrumentableList else
-                    original_dict if x is InstrumentedDict else
-                    original_set if x is InstrumentedSet else
-                    original_array if x is InstrumentedArray else
-                    x
-                    for x in type_to_check
-                ])
-        elif type(type_to_check) is types.UnionType:
-            # replace the list if found in the union with the original list
-            type_to_check = tuple(
-                [
-                    original__list if x is InstrumentableList else
-                    original_dict if x is InstrumentedDict else
-                    original_set if x is InstrumentedSet else
-                    original_array if x is InstrumentedArray else
-                    x
-                    for x in type_to_check.__args__
-                ])
-        elif type_to_check is InstrumentableList:
-            type_to_check = original__list
-        elif type_to_check is InstrumentedDict:
-            type_to_check = original_dict
-        elif type_to_check is InstrumentedSet:
-            type_to_check = original_set
-        elif type_to_check is InstrumentedArray:
-            type_to_check = original_array
+def customIsinstance(obj, type_to_check):
+    if original__isinstance(type_to_check, tuple):
+        type_to_check = tuple(
+            original__list if x is InstrumentableList else
+            original_dict if x is InstrumentedDict else
+            original_set if x is InstrumentedSet else
+            original_array if x is InstrumentedArray else
+            x
+            for x in type_to_check
+        )
 
-    return original__isinstance(object, type_to_check)
+    elif type(type_to_check) is types.UnionType:
+        type_to_check = tuple(
+            original__list if x is InstrumentableList else
+            original_dict if x is InstrumentedDict else
+            original_set if x is InstrumentedSet else
+            original_array if x is InstrumentedArray else
+            x
+            for x in type_to_check.__args__
+        )
+
+    elif type_to_check is InstrumentableList:
+        type_to_check = original__list
+    elif type_to_check is InstrumentedDict:
+        type_to_check = original_dict
+    elif type_to_check is InstrumentedSet:
+        type_to_check = original_set
+    elif type_to_check is InstrumentedArray:
+        type_to_check = original_array
+
+    return original__isinstance(obj, type_to_check)
 
 array.array = InstrumentedArray
 builtins.isinstance = customIsinstance
