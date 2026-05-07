@@ -56,7 +56,7 @@ PYMOP_INSTRUMENT_PYTEST: Instrument the pytest plugin. It can be slow.
 PYMOP_INSTRUMENT_PYMOP: Instrument the PyMOP library. It can be slow.
 PYMOP_NO_GARBAGE_COLLECTION: Perform garbage collection for the index tree.
 PYMOP_PRINT_VIOLATIONS_TO_CONSOLE: Print the violations to the console at runtime.
-PYMOP_INSTRUMENTATION_STRATEGY: Choose the instrumentation strategy to be used. The options are 'builtin' or 'ast'.
+PYMOP_INSTRUMENTATION_STRATEGY: Choose the instrumentation strategy to be used. The options are 'builtin', 'curse' or 'ast'.
 '''
 # Check if the .pymop_env file exists and read the values from it
 _pymop_env_path = os.path.join(os.getcwd(), ".pymop_env")
@@ -1610,7 +1610,18 @@ original_time = time.time
 # Record the start time of PyMOP execution
 pymop_start_time = original_time()
 
+# Global variable to control curse instrumentation
+_ENABLE_CURSE_INSTRUMENTATION = False
+
 specs_should_not_skip = set(["FileClosedAnalysis"])
+
+def is_curse_instrumentation_enabled():
+    """Check if curse instrumentation is enabled.
+
+    Returns:
+        bool: True if curse instrumentation is enabled, False otherwise.
+    """
+    return _ENABLE_CURSE_INSTRUMENTATION
 
 def inject_instrumentable_builtins(module):
     module.__dict__['list'] = ____pymop__injected__builtins____.list
@@ -1677,6 +1688,7 @@ def init_pymop():
     This is the main entry point for the PyMOP instrumentation.
     It applies the instrumentation and monitor creation before running the tests.
     """
+    global _ENABLE_CURSE_INSTRUMENTATION
     global instrument_strategy
     global statistics
     global spec_instances
@@ -1711,11 +1723,14 @@ def init_pymop():
     if instrument_strategy == "builtin":
         print("✔ Instrumentation strategy: BUILTIN")
         apply_instrumentation(False)
+    elif instrument_strategy == "curse":
+        print("✔ Instrumentation strategy: CURSE")
+        spec.IS_CURSE_INSTRUMENTATION_ENABLED = True
     elif instrument_strategy == "ast":
         print("✔ Instrumentation strategy: AST")
         apply_instrumentation(True)
     else:
-        print("ERROR: INVALID instrumentation strategy. Please choose 'ast' or 'builtin'.")
+        print("ERROR: INVALID instrumentation strategy. Please choose 'builtin', 'curse' or 'ast'.")
         sys.exit(1)
 
     # Extract the algorithm name from the pytest arguments and print it out.

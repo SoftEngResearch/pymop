@@ -54,6 +54,7 @@ from pythonmop.spec.original_builtin_method import get_original_method
 
 from typing import Any,Optional, Sequence, Callable, Union, TypeVar, Type, List
 import inspect
+from forbiddenfruit import curse
 import uuid
 import functools
 import re
@@ -64,6 +65,7 @@ SpecType = TypeVar('SpecType', bound='Spec')
 DONT_MONITOR_PYTEST = True
 DONT_MONITOR_SITE_PACKAGES = False
 DONT_MONITOR_PYTHON_SOURCE_CODE = False
+IS_CURSE_INSTRUMENTATION_ENABLED = False
 spec_to_skip_events_from = set()
 
 # Define if violations are printed to the console while the program is running
@@ -137,6 +139,13 @@ def get_caller_info() -> Tuple[str, int]:
     cf = inspect.currentframe()
     call_line_num = cf.f_back.f_back.f_lineno
     call_file_name = cf.f_back.f_back.f_code.co_filename
+
+    # Get the original file name for built-in method calls
+    if 'forbiddenfruit' in call_file_name:
+        # Go up one more frame to get the original caller
+        if cf.f_back.f_back.f_back is not None:
+            call_file_name = cf.f_back.f_back.f_back.f_code.co_filename
+            call_line_num = cf.f_back.f_back.f_back.f_lineno
     
     if 'builtin_instrumentation' in call_file_name or 'sitecustomize' in call_file_name:
         # Go up one more frame to get the original caller
@@ -793,8 +802,21 @@ class Spec:
 
                     # If function hasn't been instrumented yet
                     if not hasattr(func, 'is_instrumented') or not func.is_instrumented:
-                        setattr(namespace, func_name, _get_instrumented_func(func, self, namespace, target))
-                        instrumented_func = getattr(namespace, func_name)
+                        # Special handling for built-in types (Curse instrumentation)
+                        if namespace in [list, dict, set, tuple, str, int, float, bool] and IS_CURSE_INSTRUMENTATION_ENABLED:
+                            if instrumentation_detailed_message:
+                                print(f'Using curse for built-in type {namespace.__name__}.{func_name}')
+                            original_func = get_original_method(func_name, namespace.__name__)
+                            instrumented_func = _get_instrumented_func(original_func, self, namespace, target)
+                            try:
+                                curse(namespace, func_name, instrumented_func)
+                            except KeyError:
+                                print(f'KeyError for instrumenting built-in type using curse: {namespace.__name__}.{func_name}')
+
+                        # Regular function instrumentation (Monkey patching)
+                        else:
+                            setattr(namespace, func_name, _get_instrumented_func(func, self, namespace, target))
+                            instrumented_func = getattr(namespace, func_name)
 
                         if before:
                             instrumented_func.pythonmop_before_event_types.append(_EventType(hook.__name__, self, hook))
