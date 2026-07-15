@@ -54,7 +54,6 @@ from pythonmop.spec.original_builtin_method import get_original_method
 
 from typing import Any,Optional, Sequence, Callable, Union, TypeVar, Type, List
 import inspect
-from forbiddenfruit import curse
 import uuid
 import functools
 import re
@@ -804,6 +803,7 @@ class Spec:
                     if not hasattr(func, 'is_instrumented') or not func.is_instrumented:
                         # Special handling for built-in types (Curse instrumentation)
                         if namespace in [list, dict, set, tuple, str, int, float, bool] and IS_CURSE_INSTRUMENTATION_ENABLED:
+                            from forbiddenfruit import curse
                             if instrumentation_detailed_message:
                                 print(f'Using curse for built-in type {namespace.__name__}.{func_name}')
                             original_func = get_original_method(func_name, namespace.__name__)
