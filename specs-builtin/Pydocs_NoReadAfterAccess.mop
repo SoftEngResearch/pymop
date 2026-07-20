@@ -1,6 +1,5 @@
 {
-  "Description": "Detects TOCTOU vulnerabilities. Using access() to check if a user is authorized to e.g. open a file before actually doing so using open() creates a security hole, because the user might exploit the short time interval between checking and opening the file to manipulate it",
-  "Source": "https://docs.python.org/3.10/library/os.html#os.access",
+  "Description": "Detects TOCTOU vulnerabilities. Using access() to check if a user is authorized to e.g. open a file before actually doing so using open() creates a security hole, because the user might exploit the short time interval between checking and opening the file to manipulate it. src: https://docs.python.org/3.10/library/os.html#os.access.",
   "Variables": {
     "checked_files": "set"
   },

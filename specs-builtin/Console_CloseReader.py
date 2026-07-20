@@ -17,6 +17,7 @@ class Console_CloseReader(Spec):
             pass
 
     ere = 'close+'
+
     creation_events = ['close']
 
     def match(self, call_file_name, call_line_num):

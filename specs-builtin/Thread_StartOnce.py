@@ -13,7 +13,8 @@ class Thread_StartOnce(Spec):
         super().__init__()
 
         @self.event_before(call(threading.Thread, 'start'))
-        def start(**kw): pass
+        def start(**kw):
+            pass
 
     cfg = """
                 S -> start start A,

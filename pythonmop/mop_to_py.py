@@ -152,6 +152,28 @@ def _pretty_format_fsm(formula):
     return "\n".join(lines) if lines else f"        {text}"
 
 
+def _pretty_format_cfg(formula):
+    """
+    Expand comma-separated CFG productions into the indented Spec format.
+
+    Accepts a single-line Formula without \\n, e.g.:
+      S -> start start A, A -> start A | epsilon
+    """
+    if isinstance(formula, list):
+        formula = " ".join(str(part) for part in formula)
+
+    text = str(formula).strip()
+    productions = [p.strip().rstrip(",") for p in re.split(r"\s*,\s*(?=\w+\s*->)", text) if p.strip()]
+    if not productions:
+        return f"                {text}"
+
+    lines = []
+    for i, prod in enumerate(productions):
+        suffix = "," if i < len(productions) - 1 else ""
+        lines.append(f"                {prod}{suffix}")
+    return "\n".join(lines)
+
+
 def mop_to_py(folder_path, spec_name):
     """
     Convert a .mop JSON spec file into a Python script.
@@ -241,6 +263,9 @@ def mop_to_py(folder_path, spec_name):
         if formalism == "fsm":
             pretty_formula = _pretty_format_fsm(formula)
             file.write(f"    {formalism} = '''\n{pretty_formula}\n    '''\n\n")
+        elif formalism == "cfg":
+            pretty_formula = _pretty_format_cfg(formula)
+            file.write(f'    {formalism} = """\n{pretty_formula}\n          """\n\n')
         else:
             file.write(f"    {formalism} = '{formula}'\n\n")
         file.write(f"    creation_events = {creation_events}\n\n")

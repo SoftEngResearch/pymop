@@ -15,8 +15,9 @@ class Console_CloseWriter(Spec):
         @self.event_after(call(sys.stdout, 'close'))
         def close(**kw):
             pass
-    
+
     ere = 'close+'
+
     creation_events = ['close']
 
     def match(self, call_file_name, call_line_num):
