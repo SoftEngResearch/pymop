@@ -549,13 +549,41 @@ When enabled, PyMOP will print detailed descriptions of all specifications found
 
 ### Advanced Configuration
 
-**`PYMOP_CONVERT_SPECS`**: Converts front-end specifications to PyMOP internal specifications for correct usage.
+**`PYMOP_CONVERT_SPECS`**: Converts front-end `.mop` JSON specifications in `PYMOP_SPEC_FOLDER` to PyMOP Python Spec modules (`.py`) at startup.
 
 ```bash
+# .pymop_env
+PYMOP_SPEC_FOLDER=/path/to/specs
 PYMOP_CONVERT_SPECS=true
 ```
 
+Or on the command line before running tests:
+
+```bash
+export PYMOP_SPEC_FOLDER=/path/to/specs
+export PYMOP_CONVERT_SPECS=true
+pytest
+```
+
+When enabled, every `*.mop` in the spec folder is converted to a matching `*.py`. The Spec class name is taken from the file name (e.g. `Pydocs_NoReadAfterAccess.mop` → `class Pydocs_NoReadAfterAccess`). Optional JSON fields such as `Variables`, `Event_Actions`, and `Source` may be left out.
+
 **DEFAULT**: When not set or set to `false`, specification conversion will not be performed.
+
+#### Convert specs from the command line (without running tests)
+
+Convert one spec:
+
+```bash
+python pythonmop/mop_to_py.py /path/to/specs Pydocs_NoReadAfterAccess
+```
+
+Convert all `.mop` files in a folder:
+
+```bash
+python pythonmop/mop_to_py.py /path/to/specs
+```
+
+This writes `/path/to/specs/<SpecName>.py` next to each `/path/to/specs/<SpecName>.mop`.
 
 **`PYMOP_NO_GARBAGE_COLLECTION`**: Disables garbage collection for the index tree used by PyMOP to store monitors and track events.
 

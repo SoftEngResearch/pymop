@@ -1,19 +1,17 @@
 {
-  "Spec_Name": "UseProtp_in_FTP_TLS",
   "Description": "The user must explicitly secure the data connection by calling the prot_p() method.",
   "Source": "https://docs.python.org/3/library/ftplib.html",
   "Formalism": "fsm",
-  "Formula": "s0 [\n    ftp_tls -> s1\n]\ns1 [\n    connect -> s1\n    login -> s2\n]\ns2 [\n    login -> s2\n    prot_p -> s3\n    file_operations -> s4\n]\ns3 [\n    default s3\n]\ns4 [\n    prot_p -> s3\n    file_operations -> s4\n]\nalias match = s4",
+  "Formula": "s0 [ftp_tls -> s1] s1 [connect -> s1, login -> s2] s2 [login -> s2, prot_p -> s3, file_operations -> s4] s3 [default s3] s4 [prot_p -> s3, file_operations -> s4] alias match = s4",
   "Creation_Events": ["ftp_tls"],
-  "Event_Method_Map": {
+  "Events": {
     "Before": {
       "ftp_tls": [["ftplib.FTP_TLS", "__init__"]],
       "connect": [["ftplib.FTP_TLS", "connect"]],
       "login": [["ftplib.FTP_TLS", "login"]],
       "prot_p": [["ftplib.FTP_TLS", "prot_p"]],
       "file_operations": [["ftplib.FTP_TLS", "retr.*"], ["ftplib.FTP_TLS", "stor.*"], ["ftplib.FTP_TLS", "delete"], ["ftplib.FTP_TLS", "rename"], ["ftplib.FTP_TLS", "cwd"], ["ftplib.FTP_TLS", "mkd"], ["ftplib.FTP_TLS", "rmd"], ["ftplib.FTP_TLS", "nlst"]]
-    },
-    "After": {}
+    }
   },
   "Handlers": {
     "match": "The FTP_TLS connection must be secured using prot_p before doing sensitive data operations. File {call_file_name}, line {call_line_num}."

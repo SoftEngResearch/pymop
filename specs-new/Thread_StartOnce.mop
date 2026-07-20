@@ -1,15 +1,13 @@
 {
-  "Spec_Name": "Thread_StartOnce",
   "Description": "This is used to check if any thread has been started twice.",
   "Source": "https://docs.python.org/3/library/threading.html",
   "Formalism": "cfg",
-  "Formula": "S -> start start A,\nA -> start A | epsilon",
+  "Formula": "S -> start start A, A -> start A | epsilon",
   "Creation_Events": ["start"],
-  "Event_Method_Map": {
+  "Events": {
     "Before": {
       "start": [["threading.Thread", "start"]]
-    },
-    "After": {}
+    }
   },
   "Handlers": {
     "match": "Thread should not be started more than once (violation at file {call_file_name}, line {call_line_num})."
