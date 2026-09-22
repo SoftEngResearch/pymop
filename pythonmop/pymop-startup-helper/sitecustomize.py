@@ -701,6 +701,18 @@ class LiteralTransformer(ast.NodeTransformer):
         ast.BitOr: "__pymop__ior__",
         ast.BitXor: "__pymop__ixor__",
     }
+    ATTRIBUTE_PROTOCOL_METHODS = frozenset({
+        '__getattr__',
+        '__getattribute__',
+        '__setattr__',
+        '__delattr__',
+    })
+    ATTRIBUTE_PROTOCOL_BUILTINS = frozenset({
+        'getattr',
+        'setattr',
+        'hasattr',
+        'delattr',
+    })
 
     def __init__(self, path):
         self.path = path
@@ -793,6 +805,16 @@ class LiteralTransformer(ast.NodeTransformer):
         result = super().generic_visit(node)
         self.context_stack.pop()
         return result
+
+    def visit_FunctionDef(self, node):
+        if node.name in self.ATTRIBUTE_PROTOCOL_METHODS:
+            return node
+        return self.generic_visit(node)
+
+    def visit_AsyncFunctionDef(self, node):
+        if node.name in self.ATTRIBUTE_PROTOCOL_METHODS:
+            return node
+        return self.generic_visit(node)
 
     def visit_List(self, node):
         self.generic_visit(node)
@@ -1110,6 +1132,10 @@ class LiteralTransformer(ast.NodeTransformer):
         func = node.func
 
         if isinstance(func, ast.Name):
+            # Wrapping calls inside these methods causes infinite recursion.
+            if func.id in self.ATTRIBUTE_PROTOCOL_BUILTINS:
+                return node
+
             if func.id in ("dict", "list"):
                 node = safe_wrapped_builtin_call(
                     name=func.id,
@@ -1461,11 +1487,13 @@ def update_spec_loader(spec):
     # 'site-packages/nltk' causes ast transformation to halt for some reason (maybe infinite recursion?)
     # 'site-packages/joblib/externals/loky/backend/resource_tracker.py' causes unexpected behavior at shutdown
     # 'site-packages/django/utils/functional.py' causes infinite recursion with LazyObject.__getattribute__
+    # 'cryptography/utils.py' causes infinite recursion with _ModuleWithDeprecations.__getattr__
     if 'site-packages/zmq' in spec.origin \
         or 'numpy/core/_ufunc_config.py' in spec.origin \
         or 'site-packages/nltk' in spec.origin \
         or 'site-packages/joblib/externals/loky/backend/resource_tracker.py' in spec.origin \
-        or 'site-packages/django/utils/functional.py' in spec.origin:
+        or 'site-packages/django/utils/functional.py' in spec.origin \
+        or 'cryptography/utils.py' in spec.origin:
         return spec
     
     # Skipping pythonmop and pytest to avoid infinite recursion
