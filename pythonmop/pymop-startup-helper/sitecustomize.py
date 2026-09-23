@@ -36,6 +36,20 @@ Version: 1.1.0
 """)
 
 
+def _pymop_abort(code=1):
+    '''
+    Abort the interpreter during sitecustomize startup when an error occurs.
+    Do not use sys.exit() or os._exit() to avoid the "Fatal Python error: init_import_site" error.
+    Instead, use sys.stdout.flush() and sys.stderr.flush() to flush the output buffers and then use os._exit() to exit the process.
+    '''
+    try:
+        sys.stdout.flush()
+        sys.stderr.flush()
+    except Exception:
+        pass
+    os._exit(code)
+
+
 ################################################################################
 ##                      Read Environment Variables                            ##
 ################################################################################
@@ -73,7 +87,7 @@ if _pymop_env_file:
         _pymop_dotenv_values = {}
         _pymop_dotenv_status = False
         print(f"✘ Failed to read the .pymop_env file. Please check if the file is valid.")
-        sys.exit(1)
+        _pymop_abort()
 
 def _parse_bool(value):
     '''
@@ -1455,16 +1469,20 @@ orig_spec_from_file_location = importlib.util.spec_from_file_location
 def spec_from_file_location(*args, **kwargs):
     spec = orig_spec_from_file_location(*args, **kwargs)
     global spec_folder
-    absolute_path = os.path.abspath(spec_folder)
 
     if not spec:
         # If the spec is not found, return None   
         return spec
 
-    if spec.origin and absolute_path in spec.origin:
+    # Check if the spec folder is valid and do not return the spec if it is not valid
+    if spec_folder:
+        # Get the absolute path of the spec folder
+        absolute_path = os.path.abspath(spec_folder)
         # Instrumenting specs causes issues.
-        return spec
+        if spec.origin and absolute_path in spec.origin:
+            return spec
 
+    # Update the spec loader
     return update_spec_loader(spec)
 
 importlib.util.spec_from_file_location = spec_from_file_location
@@ -1759,13 +1777,13 @@ def init_pymop():
         apply_instrumentation(True)
     else:
         print("ERROR: INVALID instrumentation strategy. Please choose 'builtin', 'curse' or 'ast'.")
-        sys.exit(1)
+        _pymop_abort()
 
     # Extract the algorithm name from the pytest arguments and print it out.
     if algo not in supported_algo_names:
         print("ERROR: The name of the algorithm is NOT supported.")
         print("The supported algorithms are: ", supported_algo_names, "and the provided algorithm is: ", algo)
-        sys.exit(1)
+        _pymop_abort()
     else:
         print(f"✔ Parametric algorithm {algo} is currently being used.")
 
@@ -1813,8 +1831,9 @@ def init_pymop():
 
     # Extract the spec folder path from the pytest arguments and print it out.
     if spec_folder is None:
-        print("ERROR: No path to the spec folder is provided.")
-        sys.exit(1)
+        where = f".pymop_env ({_pymop_env_path})" if _pymop_dotenv_status else ".pymop_env or the environment"
+        print(f"ERROR: No path to the spec folder is provided. Set PYMOP_SPEC_FOLDER in {where}: PYMOP_SPEC_FOLDER=/path/to/specs")
+        _pymop_abort()
     else:
         print(f"The path to the spec folder: {spec_folder}.")
 
@@ -1877,7 +1896,7 @@ def init_pymop():
         spec_classes, spec_file_paths = _spec_classes_importing(spec_folder, spec_names, False, instrument_strategy)
         print("\n============================ Spec Descriptions ============================\n")
         _spec_info_printing(spec_classes)
-        exit(0)
+        _pymop_abort(0)
 
     # Print out the number of specs and spec names used in the test run.
     print(f"{len(spec_names)} specs found in the spec folder for the current test run.")
