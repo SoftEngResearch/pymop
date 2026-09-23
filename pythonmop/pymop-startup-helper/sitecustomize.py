@@ -67,6 +67,7 @@ PYMOP_STATISTICS_FILE: The file to store the statistics of the monitor. It can b
 PYMOP_NO_PRINT: When violations happens, no prints will be shown in the terminal at runtime.
 PYMOP_CONVERT_SPECS: Converting front-end specs to PyMOP internal specs for correct usages.
 PYMOP_INSTRUMENT_PYTEST: Instrument the pytest plugin. It can be slow.
+PYMOP_NO_PYTEST_PLUGIN: Do not install the PyMOP pytest plugin that records the current test name.
 PYMOP_INSTRUMENT_PYMOP: Instrument the PyMOP library. It can be slow.
 PYMOP_NO_GARBAGE_COLLECTION: Perform garbage collection for the index tree.
 PYMOP_PRINT_VIOLATIONS_TO_CONSOLE: Print the violations to the console at runtime.
@@ -126,6 +127,7 @@ noprint = _parse_bool(_pymop_env_get("PYMOP_NO_PRINT")) or False
 convert_specs = _parse_bool(_pymop_env_get("PYMOP_CONVERT_SPECS")) or False
 instrument_pymop = _parse_bool(_pymop_env_get("PYMOP_INSTRUMENT_PYMOP")) or False
 instrument_pytest = _parse_bool(_pymop_env_get("PYMOP_INSTRUMENT_PYTEST")) or False
+no_pytest_plugin = _parse_bool(_pymop_env_get("PYMOP_NO_PYTEST_PLUGIN")) or False
 instrument_site_packages = _parse_bool(_pymop_env_get("PYMOP_INSTRUMENT_SITE_PACKAGES")) or False
 instrument_python_source_code = _parse_bool(_pymop_env_get("PYMOP_INSTRUMENT_PYTHON_SOURCE_CODE")) or False
 no_garbage_collection = _parse_bool(_pymop_env_get("PYMOP_NO_GARBAGE_COLLECTION")) or False
@@ -1740,6 +1742,7 @@ def init_pymop():
     global spec_instances
     global statistics_file
     global instrument_pytest
+    global no_pytest_plugin
     global instrument_pymop
     global print_violations_to_console
     global no_garbage_collection
@@ -1826,7 +1829,10 @@ def init_pymop():
     print()
 
     # Install the PyMOP test information pytest plugin
-    install_pytest_plugin()
+    if no_pytest_plugin:
+        print("✘ PyMOP test information pytest plugin: DISABLED")
+    else:
+        install_pytest_plugin()
     print()
 
     # Extract the spec folder path from the pytest arguments and print it out.
