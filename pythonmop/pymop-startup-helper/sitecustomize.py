@@ -1988,6 +1988,7 @@ def pymop_teardown():
     global spec_instances
     global instrument_strategy
     global algo
+    global pymop_start_time
 
     # If the instrument_strategy is AST, print out the AST time and AST after instrumentation time
     if instrument_strategy == 'ast':
@@ -2010,6 +2011,7 @@ def pymop_teardown():
 
     print("============================ PythonMOP Statistics starts ============================")
 
+    StatisticsSingleton().add_end_to_end_time(original_time() - pymop_start_time)
     StatisticsSingleton().print_statistics()
 
 def _spec_converting(folder_path):

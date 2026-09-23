@@ -653,7 +653,7 @@ When PyMOP is run with statistics output enabled (e.g. `PYMOP_STATISTICS=yes` an
 |---------------------|----------------------------------------------------------------|
 | `D-violations.json` | Unique violations found during execution, with counts for each |
 | `D-time.json`       | Timing information measured by PyMOP                           |
-| `D-full.json`       | Statistics of PyMOP monitors and events during test execution  |
+| `D-stats.json`      | Statistics of PyMOP monitors and events during test execution  |
 
 ## Run PyMOP on an open-source project
 

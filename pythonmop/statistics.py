@@ -14,6 +14,7 @@ class StatisticsSingleton:
             cls._instance.instrumentation_duration = 0.0
             cls._instance.create_monitor_end_time = 0.0
             cls._instance.create_monitor_duration = 0.0
+            cls._instance.end_to_end_time = 0.0
             cls._instance.full_statistics_dict = {}  # to monitor and events
             cls._instance.violations_dict = {}  # only to violations
             cls._instance.file_name = None
@@ -43,6 +44,7 @@ class StatisticsSingleton:
         print_msg += f"Time taken for instrumentation: {self.instrumentation_duration:.5f} seconds\n"
         print_msg += f"Create monitor end time: {self.create_monitor_end_time:.5f} seconds\n"
         print_msg += f"Time taken for creating monitors: {self.create_monitor_duration:.5f} seconds\n"
+        print_msg += f"End-to-end time: {self.end_to_end_time:.5f} seconds\n"
 
         if self.file_name:
             basename, ext = os.path.splitext(self.file_name)
@@ -51,7 +53,8 @@ class StatisticsSingleton:
                             'instrumentation_end_time': self.instrumentation_end_time,
                             'instrumentation_duration': self.instrumentation_duration,
                             'create_monitor_end_time': self.create_monitor_end_time,
-                            'create_monitor_duration': self.create_monitor_duration}
+                            'create_monitor_duration': self.create_monitor_duration,
+                            'end_to_end_time': self.end_to_end_time}
             self._save_in_file(new_file_name, print_msg, dict_message)
             print(f"Time measurements are saved in {new_file_name}.")
         else:
@@ -109,7 +112,7 @@ class StatisticsSingleton:
 
             if self.file_name:
                 basename, ext = os.path.splitext(self.file_name)
-                new_file_name = basename + '-full' + ext
+                new_file_name = basename + '-stats' + ext
                 self._save_in_file(new_file_name, print_msg, self.full_statistics_dict)
                 print(f"Full statistics are saved in {new_file_name}.")
             else:
@@ -159,6 +162,12 @@ class StatisticsSingleton:
         """
         self.create_monitor_end_time = create_monitor_end_time
         self.create_monitor_duration = create_monitor_duration
+
+    def add_end_to_end_time(self, end_to_end_time):
+        """
+        Update the duration from PyMOP startup through test teardown.
+        """
+        self.end_to_end_time = end_to_end_time
 
     def add_monitor_creation(self, spec_name):
         """
