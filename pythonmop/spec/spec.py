@@ -54,6 +54,7 @@ from pythonmop.spec.original_builtin_method import get_original_method
 
 from typing import Any,Optional, Sequence, Callable, Union, TypeVar, Type, List
 import inspect
+import sys
 import uuid
 import functools
 import re
@@ -246,6 +247,10 @@ def _get_instrumented_func(func: Callable, spec, parameter_type: Type, target_pa
     # Define instrumented function
     @functools.wraps(func)
     def new_func(*args: Any, **kwargs: Any):
+        # If the meta path is None, return the original function
+        if sys.meta_path is None:
+            return func(*args, **kwargs)
+
         if hasattr(new_func, 'pythonmop_event_handling_in_progress') and new_func.pythonmop_event_handling_in_progress:
             return func(*args, **kwargs)
 
