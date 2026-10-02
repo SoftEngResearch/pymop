@@ -2015,6 +2015,9 @@ def pymop_teardown():
     # Terminate JVM used
     shutdownJVM()
 
+    print(f'Pythonmop empty-monitor violation time: {spec.empty_monitor_violation_timer.total:.6f} seconds')
+    print(f'Pythonmop monitor update time: {spec.monitor_update_timer.total:.6f} seconds')
+
     print("============================ PythonMOP Statistics starts ============================")
 
     StatisticsSingleton().add_end_to_end_time(original_time() - pymop_start_time)

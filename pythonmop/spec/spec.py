@@ -54,6 +54,8 @@ from pythonmop.spec.original_builtin_method import get_original_method
 
 from typing import Any,Optional, Sequence, Callable, Union, TypeVar, Type, List
 import inspect
+import sys
+import timeit
 import uuid
 import functools
 import re
@@ -72,6 +74,50 @@ PRINT_VIOLATIONS_TO_CONSOLE = False
 
 instrumentation_detailed_message = False
 stdlib_path = os.path.dirname(os.__file__)
+
+_monitoring_timers_enabled = False
+
+def _after_instrumentation() -> bool:
+    """True once sitecustomize has finished creating monitors."""
+    global _monitoring_timers_enabled
+    if _monitoring_timers_enabled:
+        return True
+    mod = sys.modules.get('sitecustomize')
+    if mod is not None and getattr(mod, '_PYMOP_INSTRUMENTATION_COMPLETE', False):
+        _monitoring_timers_enabled = True
+        return True
+    return False
+
+class _PostInstrumentationTimer:
+    """Wall time spent in a block after instrumentation completes.
+
+    Re-entering the same block does not add the overlapping interval twice.
+    """
+
+    def __init__(self):
+        self.total = 0.0
+        self._depth = 0
+        self._start = 0.0
+
+    def begin(self) -> bool:
+        if not _after_instrumentation():
+            return False
+        if self._depth == 0:
+            self._start = timeit.default_timer()
+        self._depth += 1
+        return True
+
+    def end(self, active: bool) -> None:
+        if not active:
+            return
+        self._depth -= 1
+        if self._depth == 0:
+            self.total += timeit.default_timer() - self._start
+
+# call_empty_monitor violation recording and match()
+empty_monitor_violation_timer = _PostInstrumentationTimer()
+# handle_events monitor.update_params_handler
+monitor_update_timer = _PostInstrumentationTimer()
 
 @dataclass
 class _EventType:
@@ -120,19 +166,23 @@ def call_empty_monitor(instance, event_type, func_name, call_file_name, call_lin
         # Extract the name of the spec
         empty_spec_name = event_type.spec.__class__.__name__
 
-        # Add the violation into the statistics.
-        violation_first_occurrence = StatisticsSingleton().add_violation(empty_spec_name,
-                                            f'last event: {last_event}, param: {param}, '
-                                            f'message: {custom_message}, '
-                                            f'file_name: {call_file_name}, line_num: {call_line_num}'
-                                            )
+        _timed = empty_monitor_violation_timer.begin()
+        try:
+            # Add the violation into the statistics.
+            violation_first_occurrence = StatisticsSingleton().add_violation(empty_spec_name,
+                                                f'last event: {last_event}, param: {param}, '
+                                                f'message: {custom_message}, '
+                                                f'file_name: {call_file_name}, line_num: {call_line_num}'
+                                                )
 
-        # Call violation handler for printing violations to the console
-        if PrintViolationSingleton().get_output_violation() and violation_first_occurrence and PRINT_VIOLATIONS_TO_CONSOLE:
-            if event_type.spec.match.__code__.co_argcount == 6:
-                event_type.spec.match(call_file_name, call_line_num, args, kwargs, custom_message)
-            else:
-                event_type.spec.match(call_file_name, call_line_num)
+            # Call violation handler for printing violations to the console
+            if PrintViolationSingleton().get_output_violation() and violation_first_occurrence and PRINT_VIOLATIONS_TO_CONSOLE:
+                if event_type.spec.match.__code__.co_argcount == 6:
+                    event_type.spec.match(call_file_name, call_line_num, args, kwargs, custom_message)
+                else:
+                    event_type.spec.match(call_file_name, call_line_num)
+        finally:
+            empty_monitor_violation_timer.end(_timed)
 
 def get_caller_info() -> Tuple[str, int]:
     cf = inspect.currentframe()
@@ -467,9 +517,13 @@ def handle_events(event_types, new_func, call_file_name, call_line_num, instance
         spec_params = tuple(spec_params)
 
         # Send results to the monitor.
-        if hasattr(event_type.spec, 'monitor'):
-            event_type.spec.monitor.update_params_handler(event_type.name, spec_params, param_instances, call_file_name,
-                                                          call_line_num, custom_message, args, kwargs)
+        _timed = monitor_update_timer.begin()
+        try:
+            if hasattr(event_type.spec, 'monitor'):
+                event_type.spec.monitor.update_params_handler(event_type.name, spec_params, param_instances, call_file_name,
+                                                              call_line_num, custom_message, args, kwargs)
+        finally:
+            monitor_update_timer.end(_timed)
 
 
 class Spec:
